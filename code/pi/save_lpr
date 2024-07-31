@@ -1,0 +1,6 @@
+# save LPR results from ram disk to run folder
+#
+#  save_lpr folder
+
+mkdir $1/lpr
+cp /var/ramdisk/*.* ~/alpha2/$1/lpr

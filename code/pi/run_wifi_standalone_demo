@@ -1,0 +1,15 @@
+# Demo of wifi sniffing and LPR on scooter
+
+echo -e "\nWarning: This demo only works from a cellular console."
+read -p  "Press Enter to continue or ^C to exit" resp 
+
+# shutdown wireless and start wifi sniffer
+sudo ifconfig wlan0 down
+sudo iw dev wlan0 interface add wlan0mon type monitor
+sudo ifconfig wlan0mon up
+kismet_server --daemonize -n
+
+# start wifi code
+python3 iot_wifi_sniffer_standalone.py
+
+sudo killall kismet_server

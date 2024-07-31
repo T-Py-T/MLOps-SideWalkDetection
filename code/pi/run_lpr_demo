@@ -1,0 +1,18 @@
+# set library path for LPR
+export LD_LIBRARY_PATH=~/lpr/ultimateALPR/binaries/raspbian/armv7l:$LD_LIBRARY_PATH
+
+
+# start scooter code
+python3 scooter.py -LC & 
+
+sleep 3
+
+# Start LPR code
+~/lpr/lpr_jpg & 
+
+# Wait for user exit
+read -rep $'\n\nPress Enter to exit\n\n' x
+
+# kill processes
+killall lpr_jpg
+killall python3
