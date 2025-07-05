@@ -19,7 +19,6 @@ from em7180 import EM7180_Master
 import re
 
 from cnn import CNN              # neural network interface
-#from iot_wifi_sniffer import *   # wifi-sniffer
 
 ############## Defines ###########################################
 
@@ -85,9 +84,6 @@ limit_sidewalk_speed = wifi_enabled = lpr_enabled = False
 if len(sys.argv) > 1:
 	if sys.argv[1].find('L') > 0:
 		lpr_enabled = True
-	if sys.argv[1].find('W') > 0:
-		wifi_enabled = True
-		from iot_wifi_sniffer import *   # wifi-sniffer
 	if sys.argv[1].find('S') > 0:
 		limit_sidewalk_speed = True
 if len(sys.argv) > 2:
@@ -180,18 +176,7 @@ def est_pos(gps, imu, speed):
 	vel = gps[3:5]
 	return (pos, vel)
 
-def log_lpr_results(lpr_results, gps):
-	lpr = re.split(r'[][|,:+]', lpr_results)
-	plate = lpr[12]
-	confidence = float(lpr[8])
-	if (wifi_enabled):
-		publishLPRData(gps[0], gps[1], gps[2], time.time(), plate, confidence)
-	else: 
-		print('LPR:        %s, %.1f' % (plate, confidence))
-
 	
-
-
 ############## Start of main code #################################
 
 def main():
@@ -398,16 +383,6 @@ def main():
 				# save output data to file: (frame, label, imclass[6], swFlag, pos[3], vel[3])
 				outFile.write(outfile_format % (str(frame_num).zfill(5), joy, imclass[0], imclass[1], 
 					imclass[2], imclass[3], 0, 0, swFlag, 0, 0, 0, 0, 0, 0))
-
-				# check for license plate read and log to cellular
-				if lpr_enabled:
-					lpr_results = lprIn.readline()
-					if len(lpr_results) > 30:
-						log_lpr_results(lpr_results, gps)
-					
-				# check for wifi sniff and log to cellular
-				if wifi_enabled:
-					sniff_wifi(gps)
 
 				
 				frame_num += 1
